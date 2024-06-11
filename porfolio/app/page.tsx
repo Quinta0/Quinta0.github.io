@@ -208,38 +208,11 @@ export default function Component() {
               <h2 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
                 My Recent Work
               </h2>
-              <Carousel className="w-full max-w-md flex items-center justify-center">
-                <CarouselContent className="flex items-center justify-center w-full">
-                  {projects.map((project, index) => (
-                      <CarouselItem key={index} className="flex items-center justify-center w-full">
-                        <div className="p-1 w-full">
-                          <Card className="bg-transparent">
-                            <CardContent className="flex flex-col items-center justify-center p-6">
-                              <img src={project.image} alt={project.name} className="rounded-lg" />
-                              <h3 className="font-medium mt-4 text-accent">{project.name}</h3>
-                              <p className="text-gray-400">{project.description}</p>
-                              <h4 className="text-gray-400 mt-4">Languages used: {Object.keys(project.languages).join(', ')}</h4>
-                              <div className="flex justify-center items-center gap-2 mt-4">
-                                <Link
-                                    href={project.url}
-                                    className="inline-flex h-8 items-center justify-center rounded-md bg-gray-50 px-4 text-sm font-medium text-gray-900 shadow transition-colors hover:bg-gray-50/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-900 dark:text-gray-50 dark:hover:bg-gray-900/90 dark:focus-visible:ring-gray-300"
-                                    prefetch={false}
-                                >
-                                  View Project
-                                </Link>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        </div>
-                      </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1/2" />
-                <CarouselNext className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-1/2" />
-              </Carousel>
+            {/*  Carousel and cards for each project go here*/}
             </div>
           </div>
         </section>
+
 
         <section className="w-full py-12 md:py-24 lg:py-32 flex flex-col items-center justify-center">
           <div className="container px-4 md:px-6">
