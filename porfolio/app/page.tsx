@@ -7,13 +7,19 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+import { Progress } from "@/components/ui/progress";
+import Autoplay from 'embla-carousel-autoplay';
+import useEmblaCarousel from "embla-carousel-react";
 import axios from "axios";
 
-// Replace 'YOUR_GITHUB_TOKEN' with your actual personal access token
 const GITHUB_TOKEN = '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';
 
 export default function Component() {
   const [projects, setProjects] = useState([]);
+  const [progress, setProgress] = useState(0);
+  const [emblaRef, embla] = useEmblaCarousel({ loop: true }, [
+    Autoplay({ delay: 10000, stopOnInteraction: false }, (emblaRoot) => emblaRoot.parentElement)
+  ]);
 
   useEffect(() => {
     const fetchGitHubRepos = async () => {
@@ -32,7 +38,7 @@ export default function Component() {
             name: repo.name,
             description: repo.description,
             url: repo.html_url,
-            image: imageUrl || '/placeholder.svg', // Use placeholder if no image URL is found
+            image: imageUrl || '/placeholder.svg',
             languages,
           };
         }));
@@ -44,7 +50,7 @@ export default function Component() {
     };
 
     const fetchImageUrl = async (owner, repo) => {
-      const formats = ['jpg', 'png', 'jpeg', 'gif', 'webp'];
+      const formats = ['jpg', 'png', 'jpeg', 'gif', 'webp', 'svg'];
       for (let format of formats) {
         const mainUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/image.${format}`;
         const masterUrl = `https://raw.githubusercontent.com/${owner}/${repo}/master/image.${format}`;
@@ -80,16 +86,23 @@ export default function Component() {
   }, []);
 
   useEffect(() => {
+    if (!embla) return;
+
+    const handleSelect = () => {
+      setProgress(0);
+    };
+
+    embla.on('select', handleSelect);
+
+    return () => {
+      embla.off('select', handleSelect);
+    };
+  }, [embla]);
+
+  useEffect(() => {
     const interval = setInterval(() => {
-      const firstItem = document.querySelector('.carousel-item:first-child');
-      if (firstItem) {
-        (firstItem as HTMLElement).style.marginLeft = '-100%';
-        setTimeout(() => {
-          firstItem.parentNode.appendChild(firstItem);
-          (firstItem as HTMLElement).style.marginLeft = '0';
-        }, 1000); // 1s animation duration
-      }
-    }, 10000); // change slide every 10 seconds
+      setProgress((prevProgress) => (prevProgress >= 100 ? 0 : prevProgress + 1));
+    }, 100);
 
     return () => clearInterval(interval);
   }, []);
@@ -210,7 +223,13 @@ export default function Component() {
               <h2 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
                 My Recent Work
               </h2>
-              <Carousel className="w-full">
+              <Carousel className="w-full"
+                plugins={[
+                  Autoplay({
+                    delay: 10000,
+                  }),
+                ]}
+              >
                 <CarouselContent>
                   {projects.map((project, index) => (
                       <CarouselItem key={index}>
@@ -227,6 +246,11 @@ export default function Component() {
                                 <Link href={project.url} className="inline-flex h-8 items-center justify-center rounded-md bg-gray-50 px-4 text-sm font-medium text-gray-900 shadow transition-colors hover:bg-gray-50/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-900 dark:text-gray-50 dark:hover:bg-gray-900/90 dark:focus-visible:ring-gray-300" prefetch={false}>
                                   View Project
                                 </Link>
+                              </div>
+                              <div className="w-full mt-4">
+                                <Progress value={progress} max={100} className="h-2 bg-gray-800">
+                                  <div className="h-full bg-blue-600 rounded-full" style={{ width: `${progress}%` }} />
+                                </Progress>
                               </div>
                             </div>
                           </div>
