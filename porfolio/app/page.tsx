@@ -208,11 +208,45 @@ export default function Component() {
               <h2 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
                 My Recent Work
               </h2>
-            {/*  Carousel and cards for each project go here*/}
+              <Carousel className="w-full max-w-lg mx-auto">
+                <CarouselPrevious
+                    className="absolute left-4 z-10 top-1/2 transform -translate-y-1/2 bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-50">
+                  <span className="sr-only">Previous</span>
+                  &#10094;
+                </CarouselPrevious>
+                <CarouselContent>
+                  {projects.map((project, index) => (
+                      <CarouselItem key={index} className="w-full flex justify-center">
+                        <Card className="w-full max-w-sm bg-gray-800">
+                          <img src={project.image} alt={project.name}
+                               className="min-h-maxa object-contain rounded-t-md justify-center"/>
+                          <CardContent className="p-4">
+                            <h3 className="text-2xl font-bold text-gray-200">{project.name}</h3>
+                            <p className="text-gray-400">{project.description}</p>
+                            <div className="flex flex-wrap mt-2 justify-center">
+                              {Object.keys(project.languages).map((language, index) => (
+                                  <span key={index} className="bg-gray-400 rounded-full px-2 py-1 text-sm mr-2 mb-2">
+                              {language}
+                            </span>
+                              ))}
+                            </div>
+                            <Link href={project.url} className="mt-4 inline-block text-sm font-medium text-blue-500">
+                              View Project
+                            </Link>
+                          </CardContent>
+                        </Card>
+                      </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselNext
+                    className="absolute right-4 z-10 top-1/2 transform -translate-y-1/2 bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-50">
+                  <span className="sr-only">Next</span>
+                  &#10095;
+                </CarouselNext>
+              </Carousel>
             </div>
           </div>
         </section>
-
 
         <section className="w-full py-12 md:py-24 lg:py-32 flex flex-col items-center justify-center">
           <div className="container px-4 md:px-6">
@@ -266,8 +300,9 @@ export default function Component() {
 
 function MoonIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
-      <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+      <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
       </svg>
   );
 }
