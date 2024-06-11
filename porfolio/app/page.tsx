@@ -1,14 +1,75 @@
 "use client";
 
 import Link from "next/link";
-import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function Component() {
+  const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+    const fetchGitHubRepos = async () => {
+      try {
+        const response = await axios.get('https://api.github.com/users/Quinta0/repos');
+        const repos = response.data;
+
+        const projectData = await Promise.all(repos.map(async (repo) => {
+          const imageUrl = await fetchImageUrl(repo.owner.login, repo.name);
+          const languages = await fetchRepoLanguages(repo.owner.login, repo.name);
+          return {
+            name: repo.name,
+            description: repo.description,
+            url: repo.html_url,
+            image: imageUrl || '/placeholder.svg', // Use placeholder if no image URL is found
+            languages,
+          };
+        }));
+
+        setProjects(projectData);
+      } catch (error) {
+        console.error('Error fetching GitHub repos:', error);
+      }
+    };
+
+    const fetchImageUrl = async (owner, repo) => {
+      const formats = ['jpg', 'png', 'jpeg', 'gif', 'webp'];
+      for (let format of formats) {
+        const mainUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/image.${format}`;
+        const masterUrl = `https://raw.githubusercontent.com/${owner}/${repo}/master/image.${format}`;
+
+        try {
+          await axios.get(mainUrl);
+          return mainUrl;
+        } catch (error) {
+          try {
+            await axios.get(masterUrl);
+            return masterUrl;
+          } catch (error) {
+            console.error(`Error fetching image for ${repo}:`, error);
+          }
+        }
+      }
+      return null;
+    };
+
+    const fetchRepoLanguages = async (owner, repo) => {
+      try {
+        const response = await axios.get(`https://api.github.com/repos/${owner}/${repo}/languages`);
+        return response.data;
+      } catch (error) {
+        console.error(`Error fetching languages for ${repo}:`, error);
+        return {};
+      }
+    };
+
+    fetchGitHubRepos();
+  }, []);
+
   useEffect(() => {
     const interval = setInterval(() => {
       const firstItem = document.querySelector('.carousel-item:first-child');
@@ -28,18 +89,13 @@ export default function Component() {
       <div className="flex flex-col min-h-[100dvh] bg-gray-950 text-gray-50">
         <section className="relative w-full h-screen overflow-hidden">
           <div className="absolute inset-0 bg-gray-900/50 z-10" />
-          <div
-              className="relative z-20 container h-full flex items-center justify-center text-center text-gray-50 gap-6 px-4 md:px-6">
+          <div className="relative z-20 container h-full flex items-center justify-center text-center text-gray-50 gap-6 px-4 md:px-6">
             <div>
               <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">John Doe</h1>
               <p className="max-w-[700px] text-lg md:text-xl">
                 I'm a full-stack developer with a passion for creating beautiful and functional web applications.
               </p>
-              <Link
-                  href="#"
-                  className="inline-flex h-10 items-center justify-center rounded-md bg-gray-50 px-8 text-sm font-medium text-gray-900 shadow transition-colors hover:bg-gray-50/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-900 dark:text-gray-50 dark:hover:bg-gray-900/90 dark:focus-visible:ring-gray-300"
-                  prefetch={false}
-              >
+              <Link href="#" className="inline-flex h-10 items-center justify-center rounded-md bg-gray-50 px-8 text-sm font-medium text-gray-900 shadow transition-colors hover:bg-gray-50/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-900 dark:text-gray-50 dark:hover:bg-gray-900/90 dark:focus-visible:ring-gray-300" prefetch={false}>
                 View My Work
               </Link>
             </div>
@@ -80,11 +136,9 @@ export default function Component() {
                   trends.
                 </p>
               </div>
-              <div
-                  className="after:absolute after:inset-y-0 after:w-px after:bg-gray-400/20 relative pl-6 after:left-0 grid gap-10">
+              <div className="after:absolute after:inset-y-0 after:w-px after:bg-gray-400/20 relative pl-6 after:left-0 grid gap-10">
                 <div className="grid gap-1 text-sm relative">
-                  <div
-                      className="aspect-square w-3 bg-gray-50 rounded-full absolute left-0 translate-x-[-29.5px] z-10 top-1" />
+                  <div className="aspect-square w-3 bg-gray-50 rounded-full absolute left-0 translate-x-[-29.5px] z-10 top-1" />
                   <div className="font-medium">June 2020 - Present - Senior Software Engineer at Acme Inc.</div>
                   <div className="text-gray-400">
                     Responsible for designing and implementing complex web applications using React, Node.js, and various
@@ -92,16 +146,14 @@ export default function Component() {
                   </div>
                 </div>
                 <div className="grid gap-1 text-sm relative">
-                  <div
-                      className="aspect-square w-3 bg-gray-50 rounded-full absolute left-0 translate-x-[-29.5px] z-10 top-1" />
+                  <div className="aspect-square w-3 bg-gray-50 rounded-full absolute left-0 translate-x-[-29.5px] z-10 top-1" />
                   <div className="font-medium">September 2018 - May 2020 - Software Engineer at Globex Corp.</div>
                   <div className="text-gray-400">
                     Worked on a team developing a large-scale e-commerce platform using React, Redux, and Django.
                   </div>
                 </div>
                 <div className="grid gap-1 text-sm relative">
-                  <div
-                      className="aspect-square w-3 bg-gray-50 rounded-full absolute left-0 translate-x-[-29.5px] z-10 top-1" />
+                  <div className="aspect-square w-3 bg-gray-50 rounded-full absolute left-0 translate-x-[-29.5px] z-10 top-1" />
                   <div className="font-medium">May 2016 - August 2018 - Intern at Stark Industries</div>
                   <div className="text-gray-400">
                     Gained experience in full-stack web development, working on various projects using HTML, CSS,
@@ -109,8 +161,7 @@ export default function Component() {
                   </div>
                 </div>
                 <div className="grid gap-1 text-sm relative">
-                  <div
-                      className="aspect-square w-3 bg-gray-50 rounded-full absolute left-0 translate-x-[-29.5px] z-10 top-1" />
+                  <div className="aspect-square w-3 bg-gray-50 rounded-full absolute left-0 translate-x-[-29.5px] z-10 top-1" />
                   <div className="font-medium">
                     September 2012 - May 2016 - Bachelor of Science in Computer Science, University of California,
                     Berkeley
@@ -152,86 +203,27 @@ export default function Component() {
               </h2>
               <Carousel className="w-full">
                 <CarouselContent>
-                  <CarouselItem>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="grid gap-2 rounded-lg border border-gray-800 bg-gray-950 p-4 shadow-sm">
-                        <img src="/placeholder.svg" alt="Project 1" className="rounded-lg" />
-                        <div className="flex flex-col items-center justify-between h-full">
-                          <div>
-                            <h3 className="text-lg font-medium">Project 1</h3>
-                            <p className="text-gray-400">A web application built with React, Node.js, and MongoDB.</p>
-                          </div>
-                          <div className="flex justify-center">
-                            <Link
-                                href="#"
-                                className="inline-flex h-8 items-center justify-center rounded-md bg-gray-50 px-4 text-sm font-medium text-gray-900 shadow transition-colors hover:bg-gray-50/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-900 dark:text-gray-50 dark:hover:bg-gray-900/90 dark:focus-visible:ring-gray-300"
-                                prefetch={false}
-                            >
-                              View Project
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="grid gap-2 rounded-lg border border-gray-800 bg-gray-950 p-4 shadow-sm">
-                        <img src="/placeholder.svg" alt="Project 2" className="rounded-lg" />
-                        <div className="flex flex-col items-center justify-between h-full">
-                          <div>
-                            <h3 className="text-lg font-medium">Project 2</h3>
-                            <p className="text-gray-400">A mobile app built with React Native and Firebase.</p>
-                          </div>
-                          <div className="flex justify-center">
-                            <Link
-                                href="#"
-                                className="inline-flex h-8 items-center justify-center rounded-md bg-gray-50 px-4 text-sm font-medium text-gray-900 shadow transition-colors hover:bg-gray-50/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-900 dark:text-gray-50 dark:hover:bg-gray-900/90 dark:focus-visible:ring-gray-300"
-                                prefetch={false}
-                            >
-                              View Project
-                            </Link>
+                  {projects.map((project, index) => (
+                      <CarouselItem key={index}>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="grid gap-2 rounded-lg border border-gray-800 bg-gray-950 p-4 shadow-sm">
+                            <img src={project.image} alt={project.name} className="rounded-lg" />
+                            <div className="flex flex-col items-center justify-between h-full">
+                              <div>
+                                <h3 className="text-lg font-medium">{project.name}</h3>
+                                <p className="text-gray-400">{project.description}</p>
+                                <h4 className="text-gray-400 mt-4">Languages: {Object.keys(project.languages).join(', ')}</h4>
+                              </div>
+                              <div className="flex justify-center items-center gap-2">
+                                <Link href={project.url} className="inline-flex h-8 items-center justify-center rounded-md bg-gray-50 px-4 text-sm font-medium text-gray-900 shadow transition-colors hover:bg-gray-50/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-900 dark:text-gray-50 dark:hover:bg-gray-900/90 dark:focus-visible:ring-gray-300" prefetch={false}>
+                                  View Project
+                                </Link>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  </CarouselItem>
-                  <CarouselItem>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="grid gap-2 rounded-lg border border-gray-800 bg-gray-950 p-4 shadow-sm">
-                        <img src="/placeholder.svg" alt="Project 3" className="rounded-lg" />
-                        <div className="flex flex-col items-center justify-between h-full">
-                          <div>
-                            <h3 className="text-lg font-medium">Project 3</h3>
-                            <p className="text-gray-400">A web application built with React, Node.js, and MongoDB.</p>
-                          </div>
-                          <div className="flex justify-center">
-                            <Link
-                                href="#"
-                                className="inline-flex h-8 items-center justify-center rounded-md bg-gray-50 px-4 text-sm font-medium text-gray-900 shadow transition-colors hover:bg-gray-50/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-900 dark:text-gray-50 dark:hover:bg-gray-900/90 dark:focus-visible:ring-gray-300"
-                                prefetch={false}
-                            >
-                              View Project
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="grid gap-2 rounded-lg border border-gray-800 bg-gray-950 p-4 shadow-sm">
-                        <img src="/placeholder.svg" alt="Project 4" className="rounded-lg" />
-                        <div className="flex flex-col items-center justify-between h-full">
-                          <div>
-                            <h3 className="text-lg font-medium">Project 4</h3>
-                            <p className="text-gray-400">A mobile app built with React Native and Firebase.</p>
-                          </div>
-                          <div className="flex justify-center">
-                            <Link
-                                href="#"
-                                className="inline-flex h-8 items-center justify-center rounded-md bg-gray-50 px-4 text-sm font-medium text-gray-900 shadow transition-colors hover:bg-gray-50/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-900 dark:text-gray-50 dark:hover:bg-gray-900/90 dark:focus-visible:ring-gray-300"
-                                prefetch={false}
-                            >
-                              View Project
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CarouselItem>
+                      </CarouselItem>
+                  ))}
                 </CarouselContent>
               </Carousel>
             </div>
@@ -247,39 +239,19 @@ export default function Component() {
               <form className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="name" className="text-gray-400">
-                      Name
-                    </Label>
-                    <Input id="name" placeholder="Enter your name"
-                           className="bg-gray-800 border-gray-700 text-gray-50" />
+                    <Label htmlFor="name" className="text-gray-400">Name</Label>
+                    <Input id="name" placeholder="Enter your name" className="bg-gray-800 border-gray-700 text-gray-50" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="text-gray-400">
-                      Email
-                    </Label>
-                    <Input
-                        id="email"
-                        type="email"
-                        placeholder="Enter your email"
-                        className="bg-gray-800 border-gray-700 text-gray-50"
-                    />
+                    <Label htmlFor="email" className="text-gray-400">Email</Label>
+                    <Input id="email" type="email" placeholder="Enter your email" className="bg-gray-800 border-gray-700 text-gray-50" />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="message" className="text-gray-400">
-                    Message
-                  </Label>
-                  <Textarea
-                      id="message"
-                      placeholder="Enter your message"
-                      rows={4}
-                      className="bg-gray-800 border-gray-700 text-gray-50"
-                  />
+                  <Label htmlFor="message" className="text-gray-400">Message</Label>
+                  <Textarea id="message" placeholder="Enter your message" rows={4} className="bg-gray-800 border-gray-700 text-gray-50" />
                 </div>
-                <Button
-                    type="submit"
-                    className="w-full bg-gray-50 text-gray-900 hover:bg-gray-50/90 dark:bg-gray-900 dark:text-gray-50 dark:hover:bg-gray-900/90"
-                >
+                <Button type="submit" className="w-full bg-gray-50 text-gray-900 hover:bg-gray-50/90 dark:bg-gray-900 dark:text-gray-50 dark:hover:bg-gray-900/90">
                   Send Message
                 </Button>
               </form>
@@ -292,18 +264,7 @@ export default function Component() {
 
 function MoonIcon(props) {
   return (
-      <svg
-          {...props}
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-      >
+      <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
       </svg>
   );
@@ -311,18 +272,7 @@ function MoonIcon(props) {
 
 function SunIcon(props) {
   return (
-      <svg
-          {...props}
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-      >
+      <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="4" />
         <path d="M12 2v2" />
         <path d="M12 20v2" />
@@ -337,8 +287,8 @@ function SunIcon(props) {
 }
 
 const images = [
-  '/images/image1.jpg',
-  '/images/image2.jpg',
+  'image1.jpg',
+  'image2.jpg',
   '/images/image3.jpg',
   '/images/image4.jpg',
   '/images/image5.jpg',
