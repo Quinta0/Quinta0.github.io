@@ -85,9 +85,6 @@ export default function Component() {
     fetchGitHubRepos();
   }, []);
 
-  // @ts-ignore
-  // @ts-ignore
-  // @ts-ignore
   return (
       <div className="flex flex-col min-h-[100dvh] bg-gray-950 text-gray-50">
         <section className="relative w-full h-screen overflow-hidden">
@@ -211,15 +208,15 @@ export default function Component() {
               <h2 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
                 My Recent Work
               </h2>
-              <Carousel className="w-full flex items-center justify-center">
-                <CarouselContent className="flex items-center justify-center">
+              <Carousel className="w-full max-w-md flex items-center justify-center">
+                <CarouselContent className="flex items-center justify-center w-full">
                   {projects.map((project, index) => (
-                      <CarouselItem key={index} className="flex items-center justify-center">
-                        <div className="p-1 w-1/3">
+                      <CarouselItem key={index} className="flex items-center justify-center w-full">
+                        <div className="p-1 w-full">
                           <Card className="bg-transparent">
                             <CardContent className="flex flex-col items-center justify-center p-6">
                               <img src={project.image} alt={project.name} className="rounded-lg" />
-                              <h3 className="font-medium mt-4 text-accent ">{project.name}</h3>
+                              <h3 className="font-medium mt-4 text-accent">{project.name}</h3>
                               <p className="text-gray-400">{project.description}</p>
                               <h4 className="text-gray-400 mt-4">Languages used: {Object.keys(project.languages).join(', ')}</h4>
                               <div className="flex justify-center items-center gap-2 mt-4">
