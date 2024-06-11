@@ -9,13 +9,20 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+// Replace 'YOUR_GITHUB_TOKEN' with your actual personal access token
+const GITHUB_TOKEN = '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';
+
 export default function Component() {
   const [projects, setProjects] = useState([]);
 
   useEffect(() => {
     const fetchGitHubRepos = async () => {
       try {
-        const response = await axios.get('https://api.github.com/users/Quinta0/repos');
+        const response = await axios.get('https://api.github.com/users/Quinta0/repos', {
+          headers: {
+            Authorization: `token ${GITHUB_TOKEN}`,
+          },
+        });
         const repos = response.data;
 
         const projectData = await Promise.all(repos.map(async (repo) => {
@@ -43,23 +50,25 @@ export default function Component() {
         const masterUrl = `https://raw.githubusercontent.com/${owner}/${repo}/master/image.${format}`;
 
         try {
-          await axios.get(mainUrl);
-          return mainUrl;
-        } catch (error) {
-          try {
-            await axios.get(masterUrl);
-            return masterUrl;
-          } catch (error) {
-            console.error(`Error fetching image for ${repo}:`, error);
-          }
-        }
+          const mainResponse = await fetch(mainUrl, { method: 'HEAD' });
+          if (mainResponse.ok) return mainUrl;
+        } catch {}
+
+        try {
+          const masterResponse = await fetch(masterUrl, { method: 'HEAD' });
+          if (masterResponse.ok) return masterUrl;
+        } catch {}
       }
       return null;
     };
 
     const fetchRepoLanguages = async (owner, repo) => {
       try {
-        const response = await axios.get(`https://api.github.com/repos/${owner}/${repo}/languages`);
+        const response = await axios.get(`https://api.github.com/repos/${owner}/${repo}/languages`, {
+          headers: {
+            Authorization: `token ${GITHUB_TOKEN}`,
+          },
+        });
         return response.data;
       } catch (error) {
         console.error(`Error fetching languages for ${repo}:`, error);
@@ -212,9 +221,9 @@ export default function Component() {
                               <div>
                                 <h3 className="text-lg font-medium">{project.name}</h3>
                                 <p className="text-gray-400">{project.description}</p>
-                                <h4 className="text-gray-400 mt-4">Languages: {Object.keys(project.languages).join(', ')}</h4>
+                                <h4 className="text-gray-400 mt-4">Languages used: {Object.keys(project.languages).join(', ')}</h4>
                               </div>
-                              <div className="flex justify-center items-center gap-2">
+                              <div className="flex justify-center items-center gap-2 mt-4">
                                 <Link href={project.url} className="inline-flex h-8 items-center justify-center rounded-md bg-gray-50 px-4 text-sm font-medium text-gray-900 shadow transition-colors hover:bg-gray-50/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-900 dark:text-gray-50 dark:hover:bg-gray-900/90 dark:focus-visible:ring-gray-300" prefetch={false}>
                                   View Project
                                 </Link>
