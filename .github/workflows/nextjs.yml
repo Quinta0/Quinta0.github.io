@@ -28,8 +28,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: List Files for Debugging
+      - name: List Files in Root Directory
         run: ls -R
+
+      - name: List Files in Portfolio Directory
+        run: ls -R portfolio
 
       - name: Detect package manager
         id: detect-package-manager
