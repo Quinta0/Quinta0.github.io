@@ -26,14 +26,20 @@ jobs:
       - name: Show Current Directory
         run: pwd
 
-      - name: List All Files in Root Directory
-        run: ls -la
-
       - name: List All Files Recursively from Root
         run: ls -R
 
+      - name: List All Files Recursively from Home Directory
+        run: ls -R $HOME
+
+      - name: Show Environment Variables
+        run: env
+
+      - name: List Contents in GitHub Workspace
+        run: ls -R ${{ github.workspace }}
+
       - name: List Files in Portfolio Directory
-        run: ls -la portfolio
+        run: ls -la ${{ github.workspace }}/portfolio || echo "portfolio directory does not exist"
 
       - name: Detect package manager
         id: detect-package-manager
