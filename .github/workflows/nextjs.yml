@@ -40,12 +40,25 @@ jobs:
       - name: Show Environment Variables
         run: env
 
-      - name: Debug Portfolio Directory Path
+      - name: List Contents of Home Directory
         run: |
-          echo "Attempting to access portfolio directory directly:"
-          ls -la ${{ github.workspace }}/portfolio
-          echo "Attempting to access portfolio directory with alternative path:"
-          ls -la ${{ github.workspace }}/porfolio || echo "portfolio directory does not exist"
+          echo "Contents of $HOME:"
+          ls -la $HOME
+
+      - name: List Files in /home/runner/work
+        run: |
+          echo "Contents of /home/runner/work:"
+          ls -la /home/runner/work
+
+      - name: List Files in Repository Directory
+        run: |
+          echo "Contents of /home/runner/work/Quinta0.github.io:"
+          ls -la /home/runner/work/Quinta0.github.io
+
+      - name: List Files in Checkout Directory
+        run: |
+          echo "Contents of /home/runner/work/Quinta0.github.io/Quinta0.github.io:"
+          ls -la /home/runner/work/Quinta0.github.io/Quinta0.github.io
 
       - name: Detect package manager
         id: detect-package-manager
