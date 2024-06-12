@@ -28,18 +28,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: List Files for Debugging
+        run: ls -R
+
       - name: Detect package manager
         id: detect-package-manager
         run: |
+          echo "Checking for yarn.lock or package.json in the portfolio directory..."
           if [ -f "${{ github.workspace }}/portfolio/yarn.lock" ]; then
             echo "manager=yarn" >> $GITHUB_OUTPUT
             echo "command=install" >> $GITHUB_OUTPUT
             echo "runner=yarn" >> $GITHUB_OUTPUT
+            echo "yarn.lock found in portfolio directory."
             exit 0
           elif [ -f "${{ github.workspace }}/portfolio/package.json" ]; then
             echo "manager=npm" >> $GITHUB_OUTPUT
             echo "command=ci" >> $GITHUB_OUTPUT
             echo "runner=npx --no-install" >> $GITHUB_OUTPUT
+            echo "package.json found in portfolio directory."
             exit 0
           else
             echo "Unable to determine package manager"
@@ -67,10 +73,10 @@ jobs:
           path: |
             .next/cache
           # Generate a new cache whenever packages or source files change.
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/portfolio/package-lock.json', '**/portfolio/yarn.lock') }}-${{ hashFiles('**/portfolio/**.[jt]s', '**/portfolio/**.[jt]sx') }}
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('portfolio/package-lock.json', 'portfolio/yarn.lock') }}-${{ hashFiles('portfolio/**/*.[jt]s', 'portfolio/**/*.[jt]sx') }}
           # If source files changed but packages didn't, rebuild from a prior cache.
           restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/portfolio/package-lock.json', '**/portfolio/yarn.lock') }}-
+            ${{ runner.os }}-nextjs-${{ hashFiles('portfolio/package-lock.json', 'portfolio/yarn.lock') }}-
 
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
