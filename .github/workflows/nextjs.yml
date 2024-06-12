@@ -32,20 +32,16 @@ jobs:
       - name: List All Files Recursively from Root
         run: ls -R
 
+      - name: List Files in Portfolio Directory
+        run: ls -la portfolio
+
       - name: Detect package manager
         id: detect-package-manager
         run: |
-          echo "Checking for yarn.lock or package.json in the portfolio directory..."
-          ls -la ${{ github.workspace }}/portfolio # List files in the portfolio directory
-          if [ -f "${{ github.workspace }}/portfolio/yarn.lock" ]; then
-            echo "manager=yarn" >> $GITHUB_OUTPUT
-            echo "command=install" >> $GITHUB_OUTPUT
-            echo "runner=yarn" >> $GITHUB_OUTPUT
-            echo "yarn.lock found in portfolio directory."
-            exit 0
-          elif [ -f "${{ github.workspace }}/portfolio/package.json" ]; then
+          echo "Checking for package.json in the portfolio directory..."
+          if [ -f "${{ github.workspace }}/portfolio/package.json" ]; then
             echo "manager=npm" >> $GITHUB_OUTPUT
-            echo "command=ci" >> $GITHUB_OUTPUT
+            echo "command=install" >> $GITHUB_OUTPUT
             echo "runner=npx --no-install" >> $GITHUB_OUTPUT
             echo "package.json found in portfolio directory."
             exit 0
@@ -58,28 +54,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: ${{ steps.detect-package-manager.outputs.manager }}
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-        with:
-          static_site_generator: next
-
-      - name: Restore cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            .next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('portfolio/package-lock.json', 'portfolio/yarn.lock') }}-${{ hashFiles('portfolio/**/*.[jt]s', 'portfolio/**/*.[jt]sx') }}
-          restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('portfolio/package-lock.json', 'portfolio/yarn.lock') }}-
+          cache: npm
 
       - name: Install dependencies
-        run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+        run: npm install
         working-directory: ./portfolio
 
       - name: Build with Next.js
-        run: ${{ steps.detect-package-manager.outputs.runner }} next build
+        run: npm run build
         working-directory: ./portfolio
 
       - name: Upload artifact
