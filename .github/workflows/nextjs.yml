@@ -29,8 +29,8 @@ jobs:
       - name: List All Files in Root Directory
         run: ls -la
 
-      - name: List Files in Portfolio Directory
-        run: ls -la portfolio
+      - name: List All Files Recursively from Root
+        run: ls -R
 
       - name: Detect package manager
         id: detect-package-manager
