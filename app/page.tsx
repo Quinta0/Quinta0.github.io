@@ -80,12 +80,14 @@ export default function Component() {
   return (
       <div className="flex flex-col min-h-[100dvh] bg-gray-950 text-gray-50">
         <section className="relative w-full h-screen overflow-hidden">
-          <div className="absolute inset-0 bg-gray-900/50 z-10" />
-          <div className="relative z-20 container h-full flex items-center justify-center text-center text-gray-50 gap-6 px-4 md:px-6">
+          <div className="absolute inset-0 bg-gray-900/50 z-10"/>
+          <div
+              className="relative z-20 container h-full flex items-center justify-center text-center text-gray-50 gap-6 px-4 md:px-6">
             <div>
-              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">John Doe</h1>
+              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">Quintavalle
+                Pietro</h1>
               <p className="max-w-[700px] text-lg md:text-xl">
-                I am a full-stack developer with a passion for creating beautiful and functional web applications.
+                I am a Computer Science student with lots of passion about Tech.
               </p>
               <Link
                   href="#"
@@ -111,7 +113,7 @@ export default function Component() {
               </div>
             </div>
             <div className="w-1/2 h-full overflow-hidden">
-              <div className="image-gallery w-full h-full" style={{ animationDirection: 'reverse' }}>
+              <div className="image-gallery w-full h-full" style={{animationDirection: 'reverse'}}>
                 {images.map((image, index) => (
                     <div key={index} className={`gallery-column column-${index % 2 === 0 ? 'even' : 'odd'}`}>
                       <img
@@ -134,44 +136,88 @@ export default function Component() {
                   Get to Know Me
                 </h2>
                 <p className="text-gray-400">
-                  I am a passionate full-stack developer with a strong background in web development. I love creating beautiful and functional applications that solve real-world problems. In my free time, I enjoy exploring new technologies, contributing to open-source projects, and staying up-to-date with the latest industry trends.
+                  I completed my high school education at the Scuola Cantonale di Commercio di Bellinzona, achieving
+                  both the Maturity and AFC.
+                  Currently, I am pursuing a bachelor's degree in Computer Science at USI, driven by my passion for
+                  technology and innovation.
+                  As a highly motivated individual, I excel in both independent and group settings, demonstrating strong
+                  abilities to handle pressure
+                  and efficiently coordinate tasks with others.
+                </p>
+                <ul className="list-disc pl-5 text-gray-400">
+                  <li>Team Collaboration: Proven ability to work effectively in team environments, contributing to group
+                    success through effective communication and cooperation.
+                  </li>
+                  <li>Independent Work: Capable of managing tasks independently with a high level of responsibility and
+                    attention to detail.
+                  </li>
+                  <li>Adaptability: Thrive in fast-paced, dynamic environments, quickly adapting to new challenges and
+                    learning opportunities.
+                  </li>
+                  <li>Leadership: Skilled in coordinating tasks, ensuring both my responsibilities and those of my team
+                    are completed efficiently.
+                  </li>
+                </ul>
+                <p className="text-gray-400">
+                  I got my first taste of coding in 2019, amidst the COVID-19 pandemic, out of boredom and curiosity.
+                  Currently immersed in my computer science studies, I am always eager to learn and grow, seeking
+                  opportunities to expand my knowledge and skills in the tech field.
+                  My passion for technology drives me to continuously improve and explore new areas, from software
+                  development to emerging tech trends.
+                </p>
+                <p className="text-gray-400">
+                  I am excited to connect with professionals and explore opportunities that allow me to apply my skills
+                  and learn from experienced individuals.
+                  Feel free to reach out for discussions on industry trends, potential job opportunities, or
+                  collaborative projects.
                 </p>
               </div>
-              <div className="after:absolute after:inset-y-0 after:w-px after:bg-gray-400/20 relative pl-6 after:left-0 grid gap-10">
+              <div
+                  className="after:absolute after:inset-y-0 after:w-px after:bg-gray-400/20 relative pl-6 after:left-0 grid gap-10">
                 <div className="grid gap-1 text-sm relative">
-                  <div className="aspect-square w-3 bg-gray-50 rounded-full absolute left-0 translate-x-[-29.5px] z-10 top-1" />
-                  <div className="font-medium">June 2020 - Present - Senior Software Engineer at Acme Inc.</div>
+                  <div
+                      className="aspect-square w-3 bg-gray-50 rounded-full absolute left-0 translate-x-[-29.5px] z-10 top-1"/>
+                  <div className="font-medium">September 2022 - Present - Student at USI Università della Svizzera
+                    italiana
+                  </div>
                   <div className="text-gray-400">
-                    Responsible for designing and implementing complex web applications using React, Node.js, and various other technologies.
+                    Pursuing a bachelor's degree in Computer Science.
                   </div>
                 </div>
                 <div className="grid gap-1 text-sm relative">
-                  <div className="aspect-square w-3 bg-gray-50 rounded-full absolute left-0 translate-x-[-29.5px] z-10 top-1" />
-                  <div className="font-medium">September 2018 - May 2020 - Software Engineer at Globex Corp.</div>
+                  <div
+                      className="aspect-square w-3 bg-gray-50 rounded-full absolute left-0 translate-x-[-29.5px] z-10 top-1"/>
+                  <div className="font-medium">September 2017 - June 2021 - Scuola Cantonale di Commercio di
+                    Bellinzona
+                  </div>
                   <div className="text-gray-400">
-                    Worked on a team developing a large-scale e-commerce platform using React, Redux, and Django.
+                    Achieved both the Maturity and AFC in Economics.
                   </div>
                 </div>
                 <div className="grid gap-1 text-sm relative">
-                  <div className="aspect-square w-3 bg-gray-50 rounded-full absolute left-0 translate-x-[-29.5px] z-10 top-1" />
-                  <div className="font-medium">May 2016 - August 2018 - Intern at Stark Industries</div>
+                  <div
+                      className="aspect-square w-3 bg-gray-50 rounded-full absolute left-0 translate-x-[-29.5px] z-10 top-1"/>
+                  <div className="font-medium">2019 - First taste of coding</div>
                   <div className="text-gray-400">
-                    Gained experience in full-stack web development, working on various projects using HTML, CSS, JavaScript, and PHP.
+                    Amidst the COVID-19 pandemic, out of boredom and curiosity.
                   </div>
                 </div>
                 <div className="grid gap-1 text-sm relative">
-                  <div className="aspect-square w-3 bg-gray-50 rounded-full absolute left-0 translate-x-[-29.5px] z-10 top-1" />
-                  <div className="font-medium">
-                    September 2012 - May 2016 - Bachelor of Science in Computer Science, University of California, Berkeley
+                  <div
+                      className="aspect-square w-3 bg-gray-50 rounded-full absolute left-0 translate-x-[-29.5px] z-10 top-1"/>
+                  <div className="font-medium">2015 - Worked for Pasteris Nicola in his architectural firm as a beginner
+                    architect
                   </div>
                   <div className="text-gray-400">
-                    Graduated with a 3.8 GPA, with a focus on web development and software engineering.
+                    Used programs like AutoCAD.
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
+
+
         <div className="fixed top-0 left-0 w-full bg-gray-950 z-30 py-2 px-4 md:px-6 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="#" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
@@ -188,8 +234,8 @@ export default function Component() {
             </Link>
           </div>
           <div className="flex items-center gap-2">
-            <SunIcon className="h-5 w-5" />
-            <MoonIcon className="h-5 w-5" />
+            <SunIcon className="h-5 w-5"/>
+            <MoonIcon className="h-5 w-5"/>
           </div>
         </div>
 
