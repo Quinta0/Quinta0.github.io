@@ -26,6 +26,9 @@ jobs:
       - name: Show Current Directory
         run: pwd
 
+      - name: List All Files in Root Directory
+        run: ls -la
+
       - name: List All Files Recursively from Root
         run: ls -R
 
@@ -45,6 +48,7 @@ jobs:
         id: detect-package-manager
         run: |
           echo "Checking for package.json in the portfolio directory..."
+          ls -la ${{ github.workspace }}/portfolio # List files in the portfolio directory
           if [ -f "${{ github.workspace }}/portfolio/package.json" ]; then
             echo "manager=npm" >> $GITHUB_OUTPUT
             echo "command=install" >> $GITHUB_OUTPUT
