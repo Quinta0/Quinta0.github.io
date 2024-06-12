@@ -10,6 +10,7 @@ const work_sans = Work_Sans({
     variable: '--font-work_sans',
 })
 
+// @ts-ignore
 export default function Layout({ children }) {
     return (
         <html lang="en">
