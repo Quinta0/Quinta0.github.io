@@ -1,23 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import { Card, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { useState, useEffect, JSX, SVGProps } from "react";
+import {Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious,} from "@/components/ui/carousel";
+import {Card, CardContent} from "@/components/ui/card";
+import {Label} from "@/components/ui/label";
+import {Input} from "@/components/ui/input";
+import {Textarea} from "@/components/ui/textarea";
+import {Button} from "@/components/ui/button";
+import {JSX, SVGProps, useEffect, useState} from "react";
 import axios from "axios";
 
-const GITHUB_TOKEN = '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';
-
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 export default function Component() {
   const [projects, setProjects] = useState([]);
 
@@ -26,12 +19,12 @@ export default function Component() {
       try {
         const response = await axios.get('https://api.github.com/users/Quinta0/repos', {
           headers: {
-            Authorization: `token ${GITHUB_TOKEN}`,
+            Authorization: GITHUB_TOKEN,
           },
         });
         const repos = response.data;
 
-        const projectData = await Promise.all(repos.map(async (repo) => {
+        const projectData = await Promise.all(repos.map(async (repo: { owner: { login: any; }; name: any; description: any; html_url: any; }) => {
           const imageUrl = await fetchImageUrl(repo.owner.login, repo.name);
           const languages = await fetchRepoLanguages(repo.owner.login, repo.name);
           return {
@@ -43,36 +36,37 @@ export default function Component() {
           };
         }));
 
+        // @ts-ignore
         setProjects(projectData);
       } catch (error) {
         console.error('Error fetching GitHub repos:', error);
       }
     };
 
-    const fetchImageUrl = async (owner, repo) => {
+    const fetchImageUrl = async (owner: any, repo: any) => {
       const formats = ['jpg', 'png', 'jpeg', 'gif', 'webp', 'svg'];
       for (let format of formats) {
         const mainUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/image.${format}`;
-        const masterUrl = `https://raw.githubusercontent.com/${owner}/${repo}/master/image.${format}`;
+        // const masterUrl = `https://raw.githubusercontent.com/${owner}/${repo}/master/image.${format}`;
 
         try {
-          const mainResponse = await fetch(mainUrl, { method: 'HEAD' });
+          const mainResponse = await fetch(mainUrl);
           if (mainResponse.ok) return mainUrl;
         } catch {}
 
-        try {
-          const masterResponse = await fetch(masterUrl, { method: 'HEAD' });
-          if (masterResponse.ok) return masterUrl;
-        } catch {}
+        // try {
+        //   const masterResponse = await fetch(masterUrl, { method: 'HEAD' });
+        //   if (masterResponse.ok) return masterUrl;
+        // } catch {}
       }
-      return null;
+      return '/image1.jpg';
     };
 
-    const fetchRepoLanguages = async (owner, repo) => {
+    const fetchRepoLanguages = async (owner: any, repo: any) => {
       try {
         const response = await axios.get(`https://api.github.com/repos/${owner}/${repo}/languages`, {
           headers: {
-            Authorization: `token ${GITHUB_TOKEN}`,
+            Authorization: GITHUB_TOKEN,
           },
         });
         return response.data;
@@ -82,7 +76,7 @@ export default function Component() {
       }
     };
 
-    fetchGitHubRepos();
+    fetchGitHubRepos().then(r => r);
   }, []);
 
   return (
@@ -219,10 +213,10 @@ export default function Component() {
                       <CarouselItem key={index} className="w-full flex justify-center">
                         <Card className="w-full max-w-sm bg-gray-800">
                           <img src={project.image} alt={project.name}
-                               className="min-h-maxa object-contain rounded-t-md justify-center"/>
+                               className="min-h-max object-contain rounded-t-md justify-center"/>
                           <CardContent className="p-4">
                             <h3 className="text-2xl font-bold text-gray-200">{project.name}</h3>
-                            <p className="text-gray-400">{project.description}</p>
+                            <p className="text-gray-400 text-justify">{project.description}</p>
                             <div className="flex flex-wrap mt-2 justify-center">
                               {Object.keys(project.languages).map((language, index) => (
                                   <span key={index} className="bg-gray-400 rounded-full px-2 py-1 text-sm mr-2 mb-2">
@@ -326,7 +320,7 @@ function SunIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
 const images = [
   'image1.jpg',
   'image2.jpg',
-  '/images/image3.jpg',
-  '/images/image4.jpg',
-  '/images/image5.jpg',
+  'image3.jpg',
+  'image4.jpg',
+  'image5.jpg',
 ];
