@@ -33,21 +33,24 @@ jobs:
         run: ls -R
 
       - name: List Files in $GITHUB_WORKSPACE
-        run: ls -la $GITHUB_WORKSPACE
-
-      - name: List Files in $GITHUB_WORKSPACE/portfolio
         run: |
-          echo "Contents of $GITHUB_WORKSPACE/portfolio:"
-          ls -la $GITHUB_WORKSPACE/portfolio
+          echo "Contents of $GITHUB_WORKSPACE:"
+          ls -la $GITHUB_WORKSPACE
 
       - name: Show Environment Variables
         run: env
+
+      - name: Debug Portfolio Directory Path
+        run: |
+          echo "Attempting to access portfolio directory directly:"
+          ls -la ${{ github.workspace }}/portfolio
+          echo "Attempting to access portfolio directory with alternative path:"
+          ls -la ${{ github.workspace }}/porfolio || echo "portfolio directory does not exist"
 
       - name: Detect package manager
         id: detect-package-manager
         run: |
           echo "Checking for package.json in the portfolio directory..."
-          ls -la ${{ github.workspace }}/portfolio
           if [ -f "${{ github.workspace }}/portfolio/package.json" ]; then
             echo "manager=npm" >> $GITHUB_OUTPUT
             echo "command=install" >> $GITHUB_OUTPUT
