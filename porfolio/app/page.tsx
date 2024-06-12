@@ -9,12 +9,8 @@ import {Textarea} from "@/components/ui/textarea";
 import {Button} from "@/components/ui/button";
 import {JSX, SVGProps, useEffect, useState} from "react";
 import axios from "axios";
-import dotenv from 'dotenv';
 
-dotenv.config();
-
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-console.log("GITHUB_TOKEN:", process.env.GITHUB_TOKEN);
+const GITHUB_TOKEN = process.env.PAT;
 
 export default function Component() {
   const [projects, setProjects] = useState([]);
@@ -24,7 +20,7 @@ export default function Component() {
       try {
         const response = await axios.get('https://api.github.com/users/Quinta0/repos', {
           headers: {
-            Authorization: `token ${GITHUB_TOKEN}`,
+            Authorization: GITHUB_TOKEN,
           },
         });
         const repos = response.data;
@@ -51,12 +47,10 @@ export default function Component() {
       const formats = ['jpg', 'png', 'jpeg', 'gif', 'webp', 'svg'];
       for (let format of formats) {
         const mainUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/image.${format}`;
-
         try {
           const mainResponse = await fetch(mainUrl);
           if (mainResponse.ok) return mainUrl;
         } catch {}
-
       }
       return '/image1.jpg';
     };
@@ -65,7 +59,7 @@ export default function Component() {
       try {
         const response = await axios.get(`https://api.github.com/repos/${owner}/${repo}/languages`, {
           headers: {
-            Authorization: `token ${GITHUB_TOKEN}`,
+            Authorization: GITHUB_TOKEN,
           },
         });
         return response.data;
@@ -74,22 +68,6 @@ export default function Component() {
         return {};
       }
     };
-
-    const checkRateLimit = async () => {
-      try {
-        const response = await axios.get('https://api.github.com/rate_limit', {
-          headers: {
-            Authorization: `token ${GITHUB_TOKEN}`,
-          },
-        });
-        console.log('Rate limit status:', response.data);
-      } catch (error) {
-        console.error('Error checking rate limit:', error);
-      }
-    };
-
-    checkRateLimit();
-
 
     fetchGitHubRepos().then(r => r);
   }, []);
