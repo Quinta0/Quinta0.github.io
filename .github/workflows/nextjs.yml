@@ -26,29 +26,28 @@ jobs:
       - name: Show Current Directory
         run: pwd
 
-      - name: List All Files in Root Directory
+      - name: List All Files in Current Directory
         run: ls -la
 
-      - name: List All Files Recursively from Root
+      - name: List All Files Recursively from Current Directory
         run: ls -R
 
-      - name: List All Files Recursively from Home Directory
-        run: ls -R $HOME
+      - name: List Files in $GITHUB_WORKSPACE
+        run: ls -la $GITHUB_WORKSPACE
+
+      - name: List Files in $GITHUB_WORKSPACE/portfolio
+        run: |
+          echo "Contents of $GITHUB_WORKSPACE/portfolio:"
+          ls -la $GITHUB_WORKSPACE/portfolio
 
       - name: Show Environment Variables
         run: env
-
-      - name: List Contents in GitHub Workspace
-        run: ls -R ${{ github.workspace }}
-
-      - name: List Files in Portfolio Directory
-        run: ls -la ${{ github.workspace }}/portfolio || echo "portfolio directory does not exist"
 
       - name: Detect package manager
         id: detect-package-manager
         run: |
           echo "Checking for package.json in the portfolio directory..."
-          ls -la ${{ github.workspace }}/portfolio # List files in the portfolio directory
+          ls -la ${{ github.workspace }}/portfolio
           if [ -f "${{ github.workspace }}/portfolio/package.json" ]; then
             echo "manager=npm" >> $GITHUB_OUTPUT
             echo "command=install" >> $GITHUB_OUTPUT
