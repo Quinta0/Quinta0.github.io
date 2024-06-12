@@ -9,8 +9,13 @@ import {Textarea} from "@/components/ui/textarea";
 import {Button} from "@/components/ui/button";
 import {JSX, SVGProps, useEffect, useState} from "react";
 import axios from "axios";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+console.log("GITHUB_TOKEN:", process.env.GITHUB_TOKEN);
+
 export default function Component() {
   const [projects, setProjects] = useState([]);
 
@@ -19,12 +24,12 @@ export default function Component() {
       try {
         const response = await axios.get('https://api.github.com/users/Quinta0/repos', {
           headers: {
-            Authorization: GITHUB_TOKEN,
+            Authorization: `token ${GITHUB_TOKEN}`,
           },
         });
         const repos = response.data;
 
-        const projectData = await Promise.all(repos.map(async (repo: { owner: { login: any; }; name: any; description: any; html_url: any; }) => {
+        const projectData = await Promise.all(repos.map(async (repo) => {
           const imageUrl = await fetchImageUrl(repo.owner.login, repo.name);
           const languages = await fetchRepoLanguages(repo.owner.login, repo.name);
           return {
@@ -36,37 +41,31 @@ export default function Component() {
           };
         }));
 
-        // @ts-ignore
         setProjects(projectData);
       } catch (error) {
         console.error('Error fetching GitHub repos:', error);
       }
     };
 
-    const fetchImageUrl = async (owner: any, repo: any) => {
+    const fetchImageUrl = async (owner, repo) => {
       const formats = ['jpg', 'png', 'jpeg', 'gif', 'webp', 'svg'];
       for (let format of formats) {
         const mainUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/image.${format}`;
-        // const masterUrl = `https://raw.githubusercontent.com/${owner}/${repo}/master/image.${format}`;
 
         try {
           const mainResponse = await fetch(mainUrl);
           if (mainResponse.ok) return mainUrl;
         } catch {}
 
-        // try {
-        //   const masterResponse = await fetch(masterUrl, { method: 'HEAD' });
-        //   if (masterResponse.ok) return masterUrl;
-        // } catch {}
       }
       return '/image1.jpg';
     };
 
-    const fetchRepoLanguages = async (owner: any, repo: any) => {
+    const fetchRepoLanguages = async (owner, repo) => {
       try {
         const response = await axios.get(`https://api.github.com/repos/${owner}/${repo}/languages`, {
           headers: {
-            Authorization: GITHUB_TOKEN,
+            Authorization: `token ${GITHUB_TOKEN}`,
           },
         });
         return response.data;
@@ -75,6 +74,22 @@ export default function Component() {
         return {};
       }
     };
+
+    const checkRateLimit = async () => {
+      try {
+        const response = await axios.get('https://api.github.com/rate_limit', {
+          headers: {
+            Authorization: `token ${GITHUB_TOKEN}`,
+          },
+        });
+        console.log('Rate limit status:', response.data);
+      } catch (error) {
+        console.error('Error checking rate limit:', error);
+      }
+    };
+
+    checkRateLimit();
+
 
     fetchGitHubRepos().then(r => r);
   }, []);
