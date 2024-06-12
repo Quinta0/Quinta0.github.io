@@ -103,6 +103,7 @@ export default function Component() {
               <div className="image-gallery w-full h-full">
                 {images.map((image, index) => (
                     <div key={index} className={`gallery-column column-${index % 2 === 0 ? 'even' : 'odd'}`}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                           src={image}
                           alt={`Hero Image ${index + 1}`}
@@ -116,6 +117,7 @@ export default function Component() {
               <div className="image-gallery w-full h-full" style={{animationDirection: 'reverse'}}>
                 {images.map((image, index) => (
                     <div key={index} className={`gallery-column column-${index % 2 === 0 ? 'even' : 'odd'}`}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                           src={image}
                           alt={`Hero Image ${index + 1}`}
@@ -138,6 +140,7 @@ export default function Component() {
                 <p className="text-gray-400">
                   I completed my high school education at the Scuola Cantonale di Commercio di Bellinzona, achieving
                   both the Maturity and AFC.
+                  {/* eslint-disable-next-line react/no-unescaped-entities */}
                   Currently, I am pursuing a bachelor's degree in Computer Science at USI, driven by my passion for
                   technology and innovation.
                   As a highly motivated individual, I excel in both independent and group settings, demonstrating strong
@@ -181,6 +184,7 @@ export default function Component() {
                     italiana
                   </div>
                   <div className="text-gray-400">
+                    {/* eslint-disable-next-line react/no-unescaped-entities */}
                     Pursuing a bachelor's degree in Computer Science.
                   </div>
                 </div>
