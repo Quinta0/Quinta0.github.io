@@ -20,18 +20,22 @@ export default function Component() {
       try {
         const response = await axios.get('https://api.github.com/users/Quinta0/repos', {
           headers: {
-            Authorization: GITHUB_TOKEN,
+            Authorization: `token ${GITHUB_TOKEN}`,
           },
         });
         const repos = response.data;
 
-        const projectData = await Promise.all(repos.map(async (repo: { owner: { login: any; }; name: any; description: any; html_url: any; }) => {
-          const imageUrl = await fetchImageUrl(repo.owner.login, repo.name);
-          const languages = await fetchRepoLanguages(repo.owner.login, repo.name);
+        // Fetch images and languages concurrently
+        const projectData = await Promise.all(repos.map(async (repo: { [x: string]: any; owner: { login: any; }; name: any; description: any; }) => {
+          const [imageUrl, languages] = await Promise.all([
+            fetchImageUrl(repo.owner.login, repo.name),
+            fetchRepoLanguages(repo.owner.login, repo.name)
+          ]);
+
           return {
             name: repo.name,
             description: repo.description,
-            url: repo.html_url,
+            url: repo["html_url"],
             image: imageUrl || '/placeholder.svg',
             languages,
           };
@@ -46,21 +50,20 @@ export default function Component() {
 
     const fetchImageUrl = async (owner: any, repo: any) => {
       const formats = ['jpg', 'png', 'jpeg', 'gif', 'webp', 'svg'];
-      for (let format of formats) {
-        const mainUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/image.${format}`;
-        try {
-          const mainResponse = await fetch(mainUrl);
-          if (mainResponse.ok) return mainUrl;
-        } catch {}
-      }
-      return '/image1.jpg';
+      const fetches = formats.map(format => fetch(`https://raw.githubusercontent.com/${owner}/${repo}/main/image.${format}`)
+          .then(response => response.ok ? `https://raw.githubusercontent.com/${owner}/${repo}/main/image.${format}` : null)
+          .catch(() => null)
+      );
+
+      const results = await Promise.all(fetches);
+      return results.find(result => result !== null) || '/image1.jpg';
     };
 
     const fetchRepoLanguages = async (owner: any, repo: any) => {
       try {
         const response = await axios.get(`https://api.github.com/repos/${owner}/${repo}/languages`, {
           headers: {
-            Authorization: GITHUB_TOKEN,
+            Authorization: `token ${GITHUB_TOKEN}`,
           },
         });
         return response.data;
