@@ -8,78 +8,11 @@ import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
 import {Button} from "@/components/ui/button";
 import {JSX, SVGProps, useEffect, useState} from "react";
-import axios from "axios";
-
-const GITHUB_TOKEN = process.env.PAT;
+import useGitHubRepos from "@/hooks/useGitHubRepos";
 
 export default function Component() {
-  const [projects, setProjects] = useState([]);
+  const projects = useGitHubRepos();
 
-  useEffect(() => {
-    const fetchGitHubRepos = async () => {
-      try {
-        const response = await axios.get('https://api.github.com/users/Quinta0/repos', {
-          headers: {
-            Authorization: GITHUB_TOKEN,
-          },
-        });
-        const repos = response.data;
-
-        // Fetch images and languages concurrently
-        const projectData = await Promise.all(repos.map(async (repo: { [x: string]: any; owner: { login: any; }; name: any; description: any; }) => {
-          const [imageUrl, languages] = await Promise.all([
-            fetchImageUrl(repo.owner.login, repo.name),
-            fetchRepoLanguages(repo.owner.login, repo.name)
-          ]);
-
-          return {
-            name: repo.name,
-            description: repo.description,
-            url: repo["html_url"],
-            image: imageUrl || '/placeholder.svg',
-            languages,
-          };
-        }));
-
-        // @ts-ignore
-        setProjects(projectData);
-      } catch (error) {
-        console.error('Error fetching GitHub repos:', error);
-      }
-    };
-
-    const fetchImageUrl = async (owner: any, repo: any) => {
-      const formats = ['jpg', 'png', 'jpeg', 'gif', 'webp', 'svg'];
-
-      for (let format of formats) {
-        const url = `https://raw.githubusercontent.com/${owner}/${repo}/main/image.${format}`;
-        try {
-          const response = await fetch(url);
-          if (response.ok) return url;
-        } catch (error) {
-          // console.error(`Error fetching image in format ${format} for ${repo}:`, error);
-        }
-      }
-
-      return '/image1.jpg'; // Fallback image
-    };
-
-    const fetchRepoLanguages = async (owner: any, repo: any) => {
-      try {
-        const response = await axios.get(`https://api.github.com/repos/${owner}/${repo}/languages`, {
-          headers: {
-            Authorization: GITHUB_TOKEN,
-          },
-        });
-        return response.data;
-      } catch (error) {
-        console.error(`Error fetching languages for ${repo}:`, error);
-        return {};
-      }
-    };
-
-    fetchGitHubRepos().then(r => r);
-  }, []);
 
 // @ts-ignore
   // @ts-ignore
