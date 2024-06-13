@@ -78,3 +78,7 @@
     font-family: var(--font-work_sans), sans-serif;
   }
 }
+
+html {
+  @apply scroll-smooth;
+}

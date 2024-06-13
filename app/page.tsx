@@ -98,8 +98,8 @@ export default function Component() {
                 I am a Computer Science student with lots of passion about Tech.
               </p>
               <Link
-                  href="#"
-                  className="inline-flex h-10 items-center justify-center rounded-md bg-gray-50 px-8 text-sm font-medium text-gray-900 shadow transition-colors hover:bg-gray-50/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-900 dark:text-gray-50 dark:hover:bg-gray-900/90 dark:focus-visible:ring-gray-300"
+                  href="#projects"
+                  className="scroll-smooth inline-flex h-10 items-center justify-center rounded-md bg-gray-50 px-8 text-sm font-medium text-gray-900 shadow transition-colors hover:bg-gray-50/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-900 dark:text-gray-50 dark:hover:bg-gray-900/90 dark:focus-visible:ring-gray-300"
                   prefetch={false}
               >
                 View My Work
@@ -233,7 +233,7 @@ export default function Component() {
           </div>
         </div>
 
-        <section className="w-full py-12 md:py-24 lg:py-32 flex items-center justify-center">
+        <section className="w-full py-12 md:py-24 lg:py-32 flex items-center justify-center" id="projects">
           <div className="container px-4 md:px-6 flex flex-col items-center justify-center">
             <div className="space-y-4 text-center w-full">
               <div className="inline-block rounded-lg bg-gray-800 px-3 py-1 text-sm">Projects</div>
@@ -248,27 +248,29 @@ export default function Component() {
                 </CarouselPrevious>
                 <CarouselContent>
                   {projects.map((project, index) => (
-                      <CarouselItem key={index} className="w-full flex justify-center">
-                        <Card className="w-full max-w-sm bg-gray-800">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={project["image"]} alt={project["name"]}
-                               className="min-h-max object-contain rounded-t-md justify-center"/>
-                          <CardContent className="p-4">
-                            <h3 className="text-2xl font-bold text-gray-200">{project["name"]}</h3>
-                            <p className="text-gray-400 text-justify">{project["description"]}</p>
-                            <div className="flex flex-wrap mt-2 justify-center">
-                              {Object.keys(project["languages"]).map((language, index) => (
-                                  <span key={index} className="bg-gray-400 rounded-full px-2 py-1 text-sm mr-2 mb-2">
-                              {language}
+                    <CarouselItem key={index} className="w-full flex justify-center">
+                      <Card className="w-full max-w-sm bg-gray-800">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={project["image"]} alt={project["name"]}
+                             className="min-h-max object-contain rounded-t-md justify-center"/>
+                        <CardContent className="p-4">
+                          <h3 className="text-2xl font-bold text-gray-200">{project["name"]}</h3>
+                          <p className="text-gray-400 text-justify">{project["description"]}</p>
+                          <div className="flex flex-wrap mt-2 justify-center">
+                            {Object.keys(project["languages"]).map((language, index) => (
+                                <span key={index} className="bg-gray-400 rounded-full px-2 py-1 text-sm mr-2 mb-2">
+                            {language}
+                          </span>
+                            ))}
+                          </div>
+                          <Link href={project["url"]} className="group text-gray-50 transition-all duration-300 ease-in-out mt-4 inline-block text-sm font-medium text-blue-500">
+                            <span className="bg-left-bottom bg-gradient-to-r from-gray-400 to-sky-600 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
+                                View Project
                             </span>
-                              ))}
-                            </div>
-                            <Link href={project["url"]} className="mt-4 inline-block text-sm hover:underline hover:decoration-2 font-medium text-blue-500">
-                              View Project
-                            </Link>
-                          </CardContent>
-                        </Card>
-                      </CarouselItem>
+                          </Link>
+                        </CardContent>
+                      </Card>
+                    </CarouselItem>
                   ))}
                 </CarouselContent>
                 <CarouselNext
@@ -278,7 +280,16 @@ export default function Component() {
                 </CarouselNext>
               </Carousel>
             </div>
+            <div className="mt-16 bg-gray-400 rounded-full px-2 py-2 text-xl mr-2 mb-2 transition duration-300">
+              <a className="group text-gray-50 transition-all duration-300 ease-in-out" href="https://github.com/Quinta0">
+                <span
+                    className="bg-left-bottom bg-gradient-to-r from-gray-400 to-sky-600 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
+                    For more you can visit my GitHub.
+                </span>
+              </a>
+            </div>
           </div>
+
         </section>
 
         <section className="w-full py-12 md:py-24 lg:py-32 flex flex-col items-center justify-center">
