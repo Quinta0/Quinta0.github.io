@@ -20,7 +20,7 @@ export default function Component() {
       try {
         const response = await axios.get('https://api.github.com/users/Quinta0/repos', {
           headers: {
-            Authorization: `token ${GITHUB_TOKEN}`,
+            Authorization: GITHUB_TOKEN,
           },
         });
         const repos = response.data;
@@ -63,7 +63,7 @@ export default function Component() {
       try {
         const response = await axios.get(`https://api.github.com/repos/${owner}/${repo}/languages`, {
           headers: {
-            Authorization: `token ${GITHUB_TOKEN}`,
+            Authorization: GITHUB_TOKEN,
           },
         });
         return response.data;
