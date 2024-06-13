@@ -104,30 +104,12 @@ export default function Component() {
           <div className="absolute inset-0 flex">
             <div className="w-1/2 h-full overflow-hidden">
               <div className="image-gallery w-full h-full">
-                {images.map((image, index) => (
-                    <div key={index} className={`gallery-column column-${index % 2 === 0 ? 'even' : 'odd'}`}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                          src={image}
-                          alt={`Hero Image ${index + 1}`}
-                          className="absolute inset-0 w-full h-full object-cover object-center"
-                      />
-                    </div>
-                ))}
-              </div>
-            </div>
-            <div className="w-1/2 h-full overflow-hidden">
-              <div className="image-gallery w-full h-full" style={{animationDirection: 'reverse'}}>
-                {images.map((image, index) => (
-                    <div key={index} className={`gallery-column column-${index % 2 === 0 ? 'even' : 'odd'}`}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                          src={image}
-                          alt={`Hero Image ${index + 1}`}
-                          className="absolute inset-0 w-full h-full object-cover object-center"
-                      />
-                    </div>
-                ))}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                    src="/image2.jpg"
+                    alt={`Hero Image`}
+                    className="absolute inset-0 w-full h-full object-cover object-center"
+                />
               </div>
             </div>
           </div>
@@ -369,10 +351,10 @@ function SunIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   );
 }
 
-const images = [
-  'image1.jpg',
-  'image2.jpg',
-  'image3.jpg',
-  'image4.jpg',
-  'image5.jpg',
-];
+// const images = [
+//   'image1.jpg',
+//   'image2.jpg',
+//   'image3.jpg',
+//   'image4.jpg',
+//   'image5.jpg',
+// ];
