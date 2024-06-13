@@ -50,13 +50,18 @@ export default function Component() {
 
     const fetchImageUrl = async (owner: any, repo: any) => {
       const formats = ['jpg', 'png', 'jpeg', 'gif', 'webp', 'svg'];
-      const fetches = formats.map(format => fetch(`https://raw.githubusercontent.com/${owner}/${repo}/main/image.${format}`)
-          .then(response => response.ok ? `https://raw.githubusercontent.com/${owner}/${repo}/main/image.${format}` : null)
-          .catch(() => null)
-      );
 
-      const results = await Promise.all(fetches);
-      return results.find(result => result !== null) || '/image1.jpg';
+      for (let format of formats) {
+        const url = `https://raw.githubusercontent.com/${owner}/${repo}/main/image.${format}`;
+        try {
+          const response = await fetch(url);
+          if (response.ok) return url;
+        } catch (error) {
+          // console.error(`Error fetching image in format ${format} for ${repo}:`, error);
+        }
+      }
+
+      return '/image1.jpg'; // Fallback image
     };
 
     const fetchRepoLanguages = async (owner: any, repo: any) => {
@@ -351,10 +356,3 @@ function SunIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   );
 }
 
-// const images = [
-//   'image1.jpg',
-//   'image2.jpg',
-//   'image3.jpg',
-//   'image4.jpg',
-//   'image5.jpg',
-// ];
