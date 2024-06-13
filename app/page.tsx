@@ -31,6 +31,7 @@ export default function Component() {
     try {
       // @ts-ignore
       const [result] = await Promise.all([emailjs.send(
+          // @ts-ignore
           process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID, // Your EmailJS service ID
           process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID, // Your EmailJS template ID
           templateParams,
