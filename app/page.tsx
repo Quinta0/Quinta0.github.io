@@ -7,12 +7,40 @@ import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
 import {Button} from "@/components/ui/button";
-import {JSX, SVGProps} from "react";
+import {JSX, SVGProps, useState} from "react";
 import useGitHubRepos from "@/hooks/useGitHubRepos";
+import emailjs from 'emailjs-com';
 
 export default function Component() {
   const projects = useGitHubRepos();
 
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [response, setResponse] = useState('');
+
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+
+    const templateParams = {
+      from_name: name,
+      from_email: email,
+      message: message,
+    };
+
+    try {
+      // @ts-ignore
+      const [result] = await Promise.all([emailjs.send(
+          process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID, // Your EmailJS service ID
+          process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID, // Your EmailJS template ID
+          templateParams,
+          process.env.NEXT_PUBLIC_EMAILJS_USER_ID // Your EmailJS user ID (public key)
+      )]);
+      setResponse('Email sent successfully');
+    } catch (error) {
+      setResponse('Failed to send email');
+    }
+  };
 
 // @ts-ignore
   // @ts-ignore
@@ -52,7 +80,7 @@ export default function Component() {
             </div>
           </div>
         </section>
-        <section className="w-full py-12 md:py-24 lg:py-32">
+        <section className="w-full py-12 md:py-24 lg:py-32" id="about">
           <div className="container px-4 md:px-6">
             <div className="grid gap-10 px-10 md:gap-16 lg:grid-cols-2">
               <div className="space-y-4">
@@ -147,16 +175,16 @@ export default function Component() {
 
         <div className="fixed top-0 left-0 w-full bg-gray-950 z-30 py-2 px-4 md:px-6 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="#" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
+            <Link href="#about" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
               About
             </Link>
-            <Link href="#" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
+            <Link href="#about" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
               Experience
             </Link>
-            <Link href="#" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
+            <Link href="#projects" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
               Projects
             </Link>
-            <Link href="#" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
+            <Link href="#contact" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
               Contact
             </Link>
           </div>
@@ -225,14 +253,14 @@ export default function Component() {
 
         </section>
 
-        <section className="w-full py-12 md:py-24 lg:py-32 flex flex-col items-center justify-center">
+        <section className="w-full py-12 md:py-24 lg:py-32 flex flex-col items-center justify-center" id="contact">
           <div className="container px-4 md:px-6">
             <div className="space-y-4">
               <div className="inline-block rounded-lg bg-gray-800 px-3 py-1 text-sm">Contact</div>
               <h2 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
                 Get in Touch
               </h2>
-              <form className="space-y-4">
+              <form className="space-y-4" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="name" className="text-gray-400">Name</Label>
@@ -240,6 +268,8 @@ export default function Component() {
                         id="name"
                         placeholder="Enter your name"
                         className="bg-gray-800 border-gray-700 text-gray-50"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
@@ -249,6 +279,8 @@ export default function Component() {
                         type="email"
                         placeholder="Enter your email"
                         className="bg-gray-800 border-gray-700 text-gray-50"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
                 </div>
@@ -259,6 +291,8 @@ export default function Component() {
                       placeholder="Enter your message"
                       rows={4}
                       className="bg-gray-800 border-gray-700 text-gray-50"
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
                   />
                 </div>
                 <Button
@@ -267,6 +301,7 @@ export default function Component() {
                 >
                   Send Message
                 </Button>
+                {response && <p>{response}</p>}
               </form>
             </div>
           </div>
@@ -286,16 +321,17 @@ function MoonIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
 
 function SunIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
-      <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="4" />
-        <path d="M12 2v2" />
-        <path d="M12 20v2" />
-        <path d="m4.93 4.93 1.41 1.41" />
-        <path d="m17.66 17.66 1.41 1.41" />
-        <path d="M2 12h2" />
-        <path d="M20 12h2" />
-        <path d="m6.34 17.66-1.41 1.41" />
-        <path d="m19.07 4.93-1.41 1.41" />
+      <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2"/>
+        <path d="M12 20v2"/>
+        <path d="m4.93 4.93 1.41 1.41"/>
+        <path d="m17.66 17.66 1.41 1.41"/>
+        <path d="M2 12h2"/>
+        <path d="M20 12h2"/>
+        <path d="m6.34 17.66-1.41 1.41"/>
+        <path d="m19.07 4.93-1.41 1.41"/>
       </svg>
   );
 }
