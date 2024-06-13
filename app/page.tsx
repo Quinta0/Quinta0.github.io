@@ -7,7 +7,7 @@ import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
 import {Button} from "@/components/ui/button";
-import {JSX, SVGProps, useEffect, useState} from "react";
+import {JSX, SVGProps} from "react";
 import useGitHubRepos from "@/hooks/useGitHubRepos";
 
 export default function Component() {
