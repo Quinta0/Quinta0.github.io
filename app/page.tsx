@@ -13,10 +13,6 @@ import useGitHubRepos from "@/hooks/useGitHubRepos";
 export default function Component() {
   const projects = useGitHubRepos();
 
-// @ts-ignore
-  // @ts-ignore
-  // @ts-ignore
-  // @ts-ignore
   return (
       <div className="flex flex-col min-h-[100dvh] bg-gray-950 text-gray-50">
         <section className="relative w-full h-screen overflow-hidden">
