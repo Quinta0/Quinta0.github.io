@@ -7,41 +7,11 @@ import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
 import {Button} from "@/components/ui/button";
-import {JSX, SVGProps, useState} from "react";
+import {JSX, SVGProps} from "react";
 import useGitHubRepos from "@/hooks/useGitHubRepos";
-import emailjs from 'emailjs-com';
 
 export default function Component() {
   const projects = useGitHubRepos();
-
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-  const [response, setResponse] = useState('');
-
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
-
-    const templateParams = {
-      from_name: name,
-      from_email: email,
-      message: message,
-    };
-
-    try {
-      // @ts-ignore
-      const [result] = await Promise.all([emailjs.send(
-          // @ts-ignore
-          process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID, // Your EmailJS service ID
-          process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID, // Your EmailJS template ID
-          templateParams,
-          process.env.NEXT_PUBLIC_EMAILJS_USER_ID // Your EmailJS user ID (public key)
-      )]);
-      setResponse('Email sent successfully');
-    } catch (error) {
-      setResponse('Failed to send email');
-    }
-  };
 
 // @ts-ignore
   // @ts-ignore
@@ -261,7 +231,7 @@ export default function Component() {
               <h2 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
                 Get in Touch
               </h2>
-              <form className="space-y-4" onSubmit={handleSubmit}>
+              <form className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="name" className="text-gray-400">Name</Label>
@@ -269,8 +239,6 @@ export default function Component() {
                         id="name"
                         placeholder="Enter your name"
                         className="bg-gray-800 border-gray-700 text-gray-50"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
@@ -280,8 +248,6 @@ export default function Component() {
                         type="email"
                         placeholder="Enter your email"
                         className="bg-gray-800 border-gray-700 text-gray-50"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
                 </div>
@@ -292,8 +258,6 @@ export default function Component() {
                       placeholder="Enter your message"
                       rows={4}
                       className="bg-gray-800 border-gray-700 text-gray-50"
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
                   />
                 </div>
                 <Button
@@ -302,7 +266,6 @@ export default function Component() {
                 >
                   Send Message
                 </Button>
-                {response && <p>{response}</p>}
               </form>
             </div>
           </div>
