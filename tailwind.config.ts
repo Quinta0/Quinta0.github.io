@@ -9,6 +9,13 @@ const config = {
     './src/**/*.{ts,tsx}',
 	],
   prefix: "",
+  colors: {
+    'text': 'var(--text)',
+    'background': 'var(--background)',
+    'primary': 'var(--primary)',
+    'secondary': 'var(--secondary)',
+    'accent': 'var(--accent)',
+  },
   theme: {
     container: {
       center: true,

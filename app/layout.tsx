@@ -1,21 +1,21 @@
-// This is the root layout component for your Next.js app.
-// Learn more: https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts#root-layout-required
-
-import { Work_Sans } from 'next/font/google'
+import { Noto_Sans_Thaana } from 'next/font/google'
 import './globals.css'
+import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
 
-const work_sans = Work_Sans({
+const noto_sans_thaana = Noto_Sans_Thaana({
     subsets: ['latin'],
     display: 'swap',
-    variable: '--font-work_sans',
+    variable: '--font-noto_sans_thaana',
 })
 
-// @ts-ignore
-export default function Layout({ children }) {
+export default function RootLayout({ children }) {
     return (
         <html lang="en">
-        <body className={work_sans.variable}>
-        {children}
+        <body className={`${noto_sans_thaana.variable}`}>
+            <Navbar />
+            {children}
+            <Footer />
         </body>
         </html>
     )
