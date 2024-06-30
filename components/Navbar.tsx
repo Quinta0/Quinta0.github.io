@@ -11,7 +11,7 @@ export default function Navbar() {
                 <Link href="/#about" className="text-sm text-[#e3eefc] font-medium hover:underline underline-offset-4" prefetch={false}>
                     About
                 </Link>
-                <Link href="/#projects" className="text-sm text-[#e3eefc] font-medium hover:underline underline-offset-4"
+                <Link href="/projects" className="text-sm text-[#e3eefc] font-medium hover:underline underline-offset-4"
                       prefetch={false}>
                     Projects
                 </Link>
