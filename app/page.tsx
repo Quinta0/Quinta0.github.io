@@ -1,5 +1,5 @@
 "use client";
-
+import Image from 'next/image';
 import Link from "next/link";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
@@ -35,11 +35,16 @@ export default function Component() {
           <div className="absolute inset-0 flex">
             <div className="w-1/2 h-full overflow-hidden">
               <div className="image-gallery w-full h-full">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                     src="/image2.jpg"
-                    alt={`Hero Image`}
-                    className="absolute inset-0 w-full h-full object-cover object-center"
+                    alt="Hero Image"
+                    layout="fill"
+                    objectFit="cover"
+                    objectPosition="center"
+                    quality={75}
+                    sizes="(max-width: 600px) 100vw,
+                               (max-width: 1200px) 50vw,
+                               50vw"
                 />
               </div>
             </div>
