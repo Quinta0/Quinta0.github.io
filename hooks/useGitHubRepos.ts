@@ -1,4 +1,3 @@
-// hooks/useGitHubRepos.ts
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -8,6 +7,15 @@ const CACHE_EXPIRATION = 1000 * 60 * 60; // 1 hour
 interface CacheItem<T> {
     data: T;
     timestamp: number;
+}
+
+interface Project {
+    name: string;
+    description: string;
+    url: string;
+    image: string;
+    languages: Record<string, number>;
+    topics: string[];
 }
 
 const axiosInstance = axios.create({
@@ -45,7 +53,7 @@ const useLocalStorage = <T>(key: string, initialValue: T) => {
 };
 
 const useGitHubRepos = () => {
-    const [projects, setProjects] = useState([]);
+    const [projects, setProjects] = useState<Project[]>([]);
     const [cache, setCache] = useLocalStorage<Record<string, CacheItem<any>>>('githubCache', {});
 
     const getCachedData = <T>(key: string): T | null => {

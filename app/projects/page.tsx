@@ -4,20 +4,30 @@ import { useState } from "react";
 import useGitHubRepos from "@/hooks/useGitHubRepos";
 import { Button } from "@/components/ui/button";
 
+// Define the types for the projects and groupedProjects
+interface Project {
+    name: string;
+    description: string;
+    image: string;
+    url: string;
+    languages: Record<string, number>;
+    topics: string[];
+}
+
+interface GroupedProjects {
+    [key: string]: Project[];
+}
+
 export default function ProjectsPage() {
-    const projects = useGitHubRepos();
+    const projects: Project[] = useGitHubRepos();
     const [selectedTag, setSelectedTag] = useState("All");
 
     // Group projects by tags
-    const groupedProjects = projects.reduce((acc, project) => {
-        // @ts-ignore
-        project.topics.forEach((topic: string | number) => {
-            // @ts-ignore
+    const groupedProjects: GroupedProjects = projects.reduce((acc: GroupedProjects, project: Project) => {
+        project.topics.forEach((topic: string) => {
             if (!acc[topic]) {
-                // @ts-ignore
                 acc[topic] = [];
             }
-            // @ts-ignore
             acc[topic].push(project);
         });
         return acc;
@@ -53,8 +63,8 @@ export default function ProjectsPage() {
                             <div className="flex flex-wrap mb-4">
                                 {Object.keys(project.languages).map((language, langIndex) => (
                                     <span key={langIndex} className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full px-2 py-1 text-sm mr-2 mb-2">
-                    {language}
-                  </span>
+                                        {language}
+                                    </span>
                                 ))}
                             </div>
                             <a href={project.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
